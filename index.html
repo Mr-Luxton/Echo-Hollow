@@ -8,11 +8,11 @@
 </head>
 <body>
   <div id="game">
-    <h1>🔨 Echo Hollow</h1>
+    <h1>🔨 Echo Hollow <span class="version">Beta v0.2</span></h1>
     <p class="lore">"The cavern waits... listen closely."</p>
 
     <div id="click-area">
-      <img src="https://i.imgur.com/Ou8sB1j.png" alt="Rock" id="rock" />
+      <img src="https://opengameart.org/sites/default/files/rock_1.png" alt="Rock" id="rock" />
       <p>Click the rock to mine Echo Shards!</p>
     </div>
 
@@ -31,9 +31,13 @@
     </div>
 
     <footer>
-      <p><em>A project created with help from ChatGPT to test its game dev skills.</em></p>
+      <p><em>A project made with help from ChatGPT to test its game dev skills.<br>
+      Made using GDevelop, GitHub Codespaces & GitHub Pages.</em></p>
     </footer>
   </div>
+
+  <audio id="click-sound" src="https://freesound.org/data/previews/273/273007_5123851-lq.mp3" preload="auto"></audio>
+  <audio id="bg-music" src="https://freesound.org/data/previews/620/620217_5674468-lq.mp3" preload="auto" loop></audio>
 
   <script src="script.js"></script>
 </body>
