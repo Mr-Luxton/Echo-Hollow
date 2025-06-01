@@ -1,5 +1,16 @@
 let shards = 0;
 let shardsPerClick = 1;
+let autoMiners = 0;
+
+let clickUpgradeCost = 10;
+let autoUpgradeCost = 50;
+
+const shardDisplay = document.getElementById("shard-count");
+const rock = document.getElementById("rock");
+const upgradeClickBtn = document.getElementById("upgrade-click-btn");
+const upgradeAutoBtn = document.getElementById("upgrade-auto-btn");
+const loreList = document.getElementById("lore-list");
+
 const loreThresholds = [10, 50, 100];
 const loreTexts = [
   "You hear a faint voice: 'The stone remembers...'",
@@ -7,41 +18,39 @@ const loreTexts = [
   "An inscription: 'The Hollow was never empty.'"
 ];
 
-const shardDisplay = document.getElementById("shard-count");
-const upgradeBtn = document.getElementById("upgrade-btn");
-const rock = document.getElementById("rock");
-const loreList = document.getElementById("lore-list");
-const clickSound = document.getElementById("click-sound");
-const bgMusic = document.getElementById("bg-music");
-
-// Start background music on first interaction
-document.body.addEventListener("click", () => {
-  if (bgMusic.paused) {
-    bgMusic.volume = 0.2;
-    bgMusic.play();
-  }
-}, { once: true });
-
 rock.addEventListener("click", () => {
   shards += shardsPerClick;
-  clickSound.currentTime = 0;
-  clickSound.play();
-  shardDisplay.textContent = shards;
-  checkLoreUnlocks();
   updateUI();
+  checkLoreUnlocks();
 });
 
-upgradeBtn.addEventListener("click", () => {
-  if (shards >= 10) {
-    shards -= 10;
+upgradeClickBtn.addEventListener("click", () => {
+  if (shards >= clickUpgradeCost) {
+    shards -= clickUpgradeCost;
     shardsPerClick++;
+    clickUpgradeCost = Math.floor(clickUpgradeCost * 1.5);
+    saveGame();
+    updateUI();
+  }
+});
+
+upgradeAutoBtn.addEventListener("click", () => {
+  if (shards >= autoUpgradeCost) {
+    shards -= autoUpgradeCost;
+    autoMiners++;
+    autoUpgradeCost = Math.floor(autoUpgradeCost * 1.8);
+    saveGame();
     updateUI();
   }
 });
 
 function updateUI() {
   shardDisplay.textContent = shards;
-  upgradeBtn.disabled = shards < 10;
+  upgradeClickBtn.textContent = `🔧 Upgrade Pickaxe (${clickUpgradeCost} shards)`;
+  upgradeClickBtn.disabled = shards < clickUpgradeCost;
+
+  upgradeAutoBtn.textContent = `⚙️ Hire Auto-Miner (${autoUpgradeCost} shards)`;
+  upgradeAutoBtn.disabled = shards < autoUpgradeCost;
 }
 
 function checkLoreUnlocks() {
@@ -54,3 +63,38 @@ function checkLoreUnlocks() {
     }
   }
 }
+
+function autoMine() {
+  shards += autoMiners;
+  updateUI();
+  checkLoreUnlocks();
+}
+
+// Save/load
+function saveGame() {
+  const saveData = {
+    shards,
+    shardsPerClick,
+    autoMiners,
+    clickUpgradeCost,
+    autoUpgradeCost
+  };
+  localStorage.setItem("echoHollowSave", JSON.stringify(saveData));
+}
+
+function loadGame() {
+  const saved = localStorage.getItem("echoHollowSave");
+  if (saved) {
+    const data = JSON.parse(saved);
+    shards = data.shards || 0;
+    shardsPerClick = data.shardsPerClick || 1;
+    autoMiners = data.autoMiners || 0;
+    clickUpgradeCost = data.clickUpgradeCost || 10;
+    autoUpgradeCost = data.autoUpgradeCost || 50;
+  }
+  updateUI();
+  checkLoreUnlocks();
+}
+
+setInterval(autoMine, 1000);
+loadGame();
