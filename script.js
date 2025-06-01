@@ -11,9 +11,21 @@ const shardDisplay = document.getElementById("shard-count");
 const upgradeBtn = document.getElementById("upgrade-btn");
 const rock = document.getElementById("rock");
 const loreList = document.getElementById("lore-list");
+const clickSound = document.getElementById("click-sound");
+const bgMusic = document.getElementById("bg-music");
+
+// Start background music on first interaction
+document.body.addEventListener("click", () => {
+  if (bgMusic.paused) {
+    bgMusic.volume = 0.2;
+    bgMusic.play();
+  }
+}, { once: true });
 
 rock.addEventListener("click", () => {
   shards += shardsPerClick;
+  clickSound.currentTime = 0;
+  clickSound.play();
   shardDisplay.textContent = shards;
   checkLoreUnlocks();
   updateUI();
