@@ -1,103 +1,82 @@
+let shards = 0;
+let upgradeCost = 10;
+let shardPerClick = 1;
+
+// Lore Data
+const loreThresholds = [10, 50, 100, 200, 350, 500, 700, 1000, 1500, 2000];
+const loreTexts = [
+  "You hear a faint voice: 'The stone remembers...'",
+  "A whisper echoes: 'We dug too deep... something answered.'",
+  "An inscription: 'The Hollow was never empty.'",
+  "A page torn from a journal: 'Light doesn’t survive here.'",
+  "Scratched into the wall: 'We were warned, but we came anyway.'",
+  "They called it a vein of knowledge... but it bled.",
+  "Echoes aren’t just sounds. They’re memories.",
+  "There was once a gate here. Now, only silence remains.",
+  "Each shard carries a whisper. And a warning.",
+  "The final page: 'It’s awake.'"
+];
+
+let unlockedLore = 0;
+let currentLorePage = 0;
+
+// Game Actions
+function mineShard() {
+  shards += shardPerClick;
+  document.getElementById("shard-count").textContent = shards;
+  checkLoreUnlocks();
+}
+
+function buyUpgrade() {
+  if (shards >= upgradeCost) {
+    shards -= upgradeCost;
+    shardPerClick++;
+    upgradeCost = Math.floor(upgradeCost * 1.5);
+    document.getElementById("shard-count").textContent = shards;
+    document.getElementById("upgrade-btn").textContent = `Upgrade Pickaxe (Cost: ${upgradeCost})`;
+  }
+}
+
+// Lore Functions
+function checkLoreUnlocks() {
+  for (let i = 0; i < loreThresholds.length; i++) {
+    if (shards >= loreThresholds[i]) {
+      unlockedLore = Math.max(unlockedLore, i + 1);
+    }
+  }
+  updateLorePage();
+}
+
+function updateLorePage() {
+  const page = document.getElementById("lore-page");
+  if (unlockedLore === 0) {
+    page.textContent = "🔒 Lore will appear here as you collect Echo Shards.";
+  } else {
+    page.textContent = loreTexts[currentLorePage] || "";
+  }
+}
+
+function nextLorePage() {
+  if (currentLorePage < unlockedLore - 1) {
+    currentLorePage++;
+    updateLorePage();
+  }
+}
+
+function prevLorePage() {
+  if (currentLorePage > 0) {
+    currentLorePage--;
+    updateLorePage();
+  }
+}
+
+// Tab Controls
+function switchTab(tab) {
+  document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+  document.getElementById(`${tab}-tab`).classList.add("active");
+}
+
+// Initialize UI
 document.addEventListener("DOMContentLoaded", () => {
-  let shards = 0;
-  let shardsPerClick = 1;
-  let autoMiners = 0;
-
-  let clickUpgradeCost = 10;
-  let autoUpgradeCost = 50;
-
-  const shardDisplay = document.getElementById("shard-count");
-  const rock = document.getElementById("rock");
-  const upgradeClickBtn = document.getElementById("upgrade-click-btn");
-  const upgradeAutoBtn = document.getElementById("upgrade-auto-btn");
-  const loreList = document.getElementById("lore-list");
-
-  const loreThresholds = [10, 50, 100];
-  const loreTexts = [
-    "You hear a faint voice: 'The stone remembers...'",
-    "A whisper echoes: 'We dug too deep... something answered.'",
-    "An inscription: 'The Hollow was never empty.'"
-  ];
-
-  rock.addEventListener("click", () => {
-    shards += shardsPerClick;
-    updateUI();
-    checkLoreUnlocks();
-    saveGame();
-  });
-
-  upgradeClickBtn.addEventListener("click", () => {
-    if (shards >= clickUpgradeCost) {
-      shards -= clickUpgradeCost;
-      shardsPerClick++;
-      clickUpgradeCost = Math.floor(clickUpgradeCost * 1.5);
-      updateUI();
-      saveGame();
-    }
-  });
-
-  upgradeAutoBtn.addEventListener("click", () => {
-    if (shards >= autoUpgradeCost) {
-      shards -= autoUpgradeCost;
-      autoMiners++;
-      autoUpgradeCost = Math.floor(autoUpgradeCost * 1.8);
-      updateUI();
-      saveGame();
-    }
-  });
-
-  function updateUI() {
-    shardDisplay.textContent = shards;
-    upgradeClickBtn.textContent = `🔧 Upgrade Pickaxe (${clickUpgradeCost} shards)`;
-    upgradeClickBtn.disabled = shards < clickUpgradeCost;
-
-    upgradeAutoBtn.textContent = `⚙️ Hire Auto-Miner (${autoUpgradeCost} shards)`;
-    upgradeAutoBtn.disabled = shards < autoUpgradeCost;
-  }
-
-  function checkLoreUnlocks() {
-    for (let i = 0; i < loreThresholds.length; i++) {
-      if (shards >= loreThresholds[i]) {
-        const item = loreList.children[i];
-        if (item.textContent.startsWith("🔒")) {
-          item.textContent = `📖 ${loreTexts[i]}`;
-        }
-      }
-    }
-  }
-
-  function autoMine() {
-    shards += autoMiners;
-    updateUI();
-    checkLoreUnlocks();
-    saveGame();
-  }
-
-  function saveGame() {
-    const saveData = {
-      shards,
-      shardsPerClick,
-      autoMiners,
-      clickUpgradeCost,
-      autoUpgradeCost
-    };
-    localStorage.setItem("echoHollowSave", JSON.stringify(saveData));
-  }
-
-  function loadGame() {
-    const saved = localStorage.getItem("echoHollowSave");
-    if (saved) {
-      const data = JSON.parse(saved);
-      shards = data.shards || 0;
-      shardsPerClick = data.shardsPerClick || 1;
-      autoMiners = data.autoMiners || 0;
-      clickUpgradeCost = data.clickUpgradeCost || 10;
-      autoUpgradeCost = data.autoUpgradeCost || 50;
-    }
-    updateUI();
-    checkLoreUnlocks();
-  }
-
-  setInterval(autoMine, 1000);
-  loadGame();
+  updateLorePage();
 });
