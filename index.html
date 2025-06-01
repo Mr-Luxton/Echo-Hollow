@@ -4,38 +4,53 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Echo Hollow</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
   <div id="game">
-    <h1>🔨 Echo Hollow <span class="version">Beta v0.4</span></h1>
-<p class="lore">"The cavern waits... listen closely."</p>
+    <h1>🔨 Echo Hollow <span class="version">Beta v0.5</span></h1>
+    <p class="lore">"The cavern waits... listen closely."</p>
 
     <div id="click-area">
-      <img src="https://opengameart.org/sites/default/files/rock_1.png" alt="Rock" id="rock" />
-      <p>Click the rock to mine Echo Shards!</p>
+      <img src="rock.png" alt="Rock" onclick="mineShard()" />
+      <p>Click the rock to collect Echo Shards</p>
     </div>
 
     <div id="stats">
-      <p><strong>Echo Shards:</strong> <span id="shard-count">0</span></p>
-      <button id="upgrade-click-btn">🔧 Upgrade Pickaxe (10 shards)</button><br>
-      <button id="upgrade-auto-btn">⚙️ Hire Auto-Miner (50 shards)</button>
+      <p>Echo Shards: <span id="shard-count">0</span></p>
+      <button onclick="buyUpgrade()" id="upgrade-btn">Upgrade Pickaxe (Cost: 10)</button>
     </div>
 
-    <div id="lore-entries">
-      <h2>Lore</h2>
-      <ul id="lore-list">
-        <li>🔒 ???</li>
-        <li>🔒 ???</li>
-        <li>🔒 ???</li>
-      </ul>
+    <!-- Bottom Menu Tabs -->
+    <div id="menu-tabs">
+      <button class="tab-button" onclick="switchTab('lore')">📖 Lore</button>
+      <button class="tab-button" onclick="switchTab('info')">ℹ️ Info</button>
+      <button class="tab-button" onclick="switchTab('settings')">⚙️ Settings</button>
     </div>
 
-    <footer>
-      <p><em>Thanks for playing<br>
-      Made using GDevelop, GitHub Codespaces & GitHub Pages.</em></p>
-    </footer>
-    
+    <div id="tab-content">
+      <div id="lore-tab" class="tab active">
+        <h2>Lore Book</h2>
+        <div id="lore-book">
+          <p id="lore-page">🔒 Lore will appear here as you collect Echo Shards.</p>
+          <div class="page-buttons">
+            <button onclick="prevLorePage()">⬅️ Prev</button>
+            <button onclick="nextLorePage()">➡️ Next</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="info-tab" class="tab">
+        <h2>Game Info</h2>
+        <p><strong>Version:</strong> Beta v0.5</p>
+        <p><strong>Made with:</strong> GDevelop, GitHub Codespaces, and ChatGPT ❤️</p>
+      </div>
+
+      <div id="settings-tab" class="tab">
+        <h2>Settings</h2>
+        <p>Coming soon...</p>
+      </div>
+    </div>
   </div>
 
   <script src="script.js"></script>
