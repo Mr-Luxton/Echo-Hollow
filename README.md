@@ -38,8 +38,7 @@ You are awakening something.
 
 This game runs entirely in your browser.
 
-➡️ Play it here: [https://yourusername.github.io/echo-hollow](https://yourusername.github.io/echo-hollow)
-
+➡️ Play it here: https://mr-luxton.github.io/Echo-Hollow/
 (No download required)
 
 ---
