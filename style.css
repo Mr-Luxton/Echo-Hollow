@@ -16,6 +16,11 @@ h1 {
   color: #ffdd57;
 }
 
+.version {
+  font-size: 0.6em;
+  color: #aaa;
+}
+
 #click-area img {
   width: 128px;
   cursor: pointer;
