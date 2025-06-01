@@ -41,8 +41,9 @@ button {
   color: white;
   padding: 10px;
   font-size: 1em;
-  margin-top: 10px;
+  margin: 8px;
   cursor: pointer;
+  width: 250px;
 }
 
 button:disabled {
